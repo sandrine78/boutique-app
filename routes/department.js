@@ -19,7 +19,6 @@ router.post("/department/create", async (req, res) => {
       }
     });
   }
-
   // On genere le nouveau produit
   try {
     // On cree un nouveau produit avec le Modele
@@ -50,12 +49,12 @@ router.get("/department", async (req, res) => {
 
 router.put("/department/update", async (req, res) => {
     // res.json({ message: "Departments modified" });
-const id = req.body.id;
+const id = req.query.id;
 const title = req.body.title;
 
   try {
     
-    const Departments = await Department.findOne({ _id: id });
+    const Departments = await Department.findOne({ _id: id });  // ou .findById(id)
     // Si on en trouve un ERROR
     Departments.title = title;
     await Departments.save();
