@@ -44,7 +44,8 @@ router.post("/product/create", async (req, res) => {
 
 router.get("/product", async (req, res) => {
   //res.json({ message: "product List" });
-  // const category = req.query.category; // on a reucp les params des query
+
+  // const category = req.query.category; // on a recup les params des query
   // const title = req.query.title;
   // const priceMin = req.query.priceMin;
   // const priceMax = req.query.priceMax;
@@ -56,8 +57,9 @@ router.get("/product", async (req, res) => {
   // pas égale à undefined donc si il y a qqch
   if (title !== undefined) options.title = title; // alors tu vas chcher options et creer une clé en lui donnant nom title
 
-  if (category !== undefined) {  // ou maniere de faire 
-    options.category = category; 
+  if (category !== undefined) {
+    // ou maniere de faire
+    options.category = category;
   }
   if (priceMin !== undefined) {
     options.price = { $gte: priceMin }; // gte = mongoose greater than ou equal
@@ -74,12 +76,40 @@ router.get("/product", async (req, res) => {
   }
 });
 
-router.put("/product/update", (req, res) => {
-  res.json({ message: "product modified" });
+router.put("/product/update", async (req, res) => {
+  // res.json({ message: "product modified" });
+  const id = req.query.id;
+  const title = req.body.title;
+  const description = req.body.description;
+  const price = req.body.price;
+  const category = req.body.category;
+
+  try {
+    const products = await Product.findOne({ _id: id });
+    // Si on en trouve un ERROR
+    products.id = id;
+    products.title = title; // pour changer sur postman title
+    products.description = description; // pour changer sur postman description
+    products.price = price;
+    products.category = category;
+
+    await products.save();
+    res.status(201).send(products);
+  } catch (error) {
+    res.status(400).send({ error: error.message });
+  }
 });
 
-router.delete("/product/delete", (req, res) => {
-  res.json({ message: "product deleted" });
+router.delete("/product/delete", async(req, res) => {
+//res.json({ message: "product deleted" });
+const id = req.query.id;
+  try {
+    await Product.findByIdAndRemove(id);
+    res.send("Ok");
+  } catch (error) {
+    res.status(400).send({ error: error.message });
+  }
 });
+
 
 module.exports = router;
