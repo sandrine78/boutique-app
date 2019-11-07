@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const app = express();
 app.use(bodyParser.json());
 
-mongoose.connect("mongodb://localhost/boutique-app", {
+mongoose.connect(process.env.MONGODB_URI ||"mongodb://localhost/boutique-app", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false
@@ -19,6 +19,6 @@ app.use(prodRoute);
 
 const boutique = [];
 
-app.listen(3000, () => {
+app.listen(process.env.PORT || 3000, () => {
   console.log("Server started");
 });
