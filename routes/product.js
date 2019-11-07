@@ -69,8 +69,8 @@ router.get("/product", async (req, res) => {
   }
 
   try {
-    const Products = await Product.find(options).populate("category"); // on va chcher produit selon conditions que je te passe en param cad options + tout ce qu'il y a dans la category à laquel appartient le produit
-    res.json(Products);
+    const products = await Product.find(options).populate("category"); // on va chcher produit selon conditions que je te passe en param cad options + tout ce qu'il y a dans la category à laquel appartient le produit
+    res.json(products);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

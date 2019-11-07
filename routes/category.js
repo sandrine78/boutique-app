@@ -44,8 +44,9 @@ router.post("/category/create", async (req, res) => {
 router.get("/category", async(req, res) => {
     //res.json({ message: "Category List" });
     try {
-        const Categories = await Category.find();
-        res.json(Categories);
+        // on creeune categorie en remplissant le modele
+        const categories = await Category.find().populate("department");
+        res.json(categories);
       } catch (error) {
         res.status(400).json({ error: error.message });
       }
@@ -54,19 +55,19 @@ router.get("/category", async(req, res) => {
 
 router.put("/category/update", async (req, res) => {
     //res.json({ message: "Category modified" });
-const id = req.body.id;
+const id = req.query.id;
 const title = req.body.title;
 const description = req.body.description;
 const department = req.body.department;
 
   try {
     
-    const Categories = await Category.findOne({ _id: id });
+    const categories = await Category.findOne({ _id: id });
     // Si on en trouve un ERROR
-    Categories.title = title;   // pour changer sur postman title 
-    Categories.description = description;  // pour changer sur postman description
-    await Categories.save();
-    res.status(201).send(Categories);
+    categories.title = title;   // pour changer sur postman title 
+    categories.description = description;  // pour changer sur postman description
+    await categories.save();
+    res.status(201).send(categories);
   } catch (error) {
     res.status(400).send({ error: error.message });
   }
@@ -75,7 +76,7 @@ const department = req.body.department;
 
 router.delete("/category/delete", async (req, res) => {
     //res.json({ message: "Category deleted" });
-    const id = req.body.id;
+    const id = req.query.id;
     try {
       // On supprime le dept qui a pour id `id`
       await Category.findByIdAndRemove(id);
